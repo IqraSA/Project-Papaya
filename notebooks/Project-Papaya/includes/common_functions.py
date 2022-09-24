@@ -8,13 +8,12 @@ def add_ingestion_date(input_df):
 
 # Function to move the "partition by" column at the end as Spark expects the last column of the dataframe to be the partition column
 def re_arrange_partition_column(input_df, partition_column):
-  column_list = []
-  for column_name in input_df.schema.names:
-    if column_name != partition_column:
-      column_list.append(column_name)
+  column_list = [
+      column_name for column_name in input_df.schema.names
+      if column_name != partition_column
+  ]
   column_list.append(partition_column)
-  output_df = input_df.select(column_list)
-  return output_df
+  return input_df.select(column_list)
 
 # COMMAND ----------
 
@@ -41,6 +40,5 @@ def df_column_to_list(input_df, column_name):
   df_row_list = input_df.select(column_name) \
                         .distinct() \
                         .collect()
-  
-  column_value_list = [row[column_name] for row in df_row_list]
-  return column_value_list
+
+  return [row[column_name] for row in df_row_list]

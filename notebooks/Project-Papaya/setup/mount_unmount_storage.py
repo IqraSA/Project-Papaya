@@ -18,8 +18,9 @@ configs = {"fs.azure.account.auth.type": "OAuth",
 
 #Function to mount containers if they are not already mounted
 def mount_adls(container_name):
-    source = "abfss://"+container_name+"@"+storage_account_name+".dfs.core.windows.net/"
-    mount_point = "/mnt/"+storage_account_name+"/"+container_name
+    source = f"abfss://{container_name}@{storage_account_name}.dfs.core.windows.net/"
+
+    mount_point = f"/mnt/{storage_account_name}/{container_name}"
     if any(mount_point in mount for mount in dbutils.fs.mounts()):
         print("Containter already mounted at", mount_point)
     else:
@@ -38,8 +39,9 @@ for container in container_to_mount:
 
 #Function to unmount any mounted containers
 def unmount_adls(container_name):
-    source = "abfss://"+container_name+"@"+storage_account_name+".dfs.core.windows.net/"
-    mount_point = "/mnt/"+storage_account_name+"/"+container_name
+    source = f"abfss://{container_name}@{storage_account_name}.dfs.core.windows.net/"
+
+    mount_point = f"/mnt/{storage_account_name}/{container_name}"
     if all(mount_point not in mount for mount in dbutils.fs.mounts()):
         print(container_name,"Containter already unmounted")
     else:
